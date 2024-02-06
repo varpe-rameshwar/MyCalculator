@@ -1,112 +1,73 @@
-let input = document.querySelector("input");
-let number;
+document.addEventListener("DOMContentLoaded", () => {
+    let display = document.querySelector("input");
+    let buttons = document.querySelectorAll(".digit, .operator");
 
-const zero = document.querySelector("#zero");
-const onClickZero = () => {
-    // input.value = value;
-    // console.log(zero.innerText);
-    let btnValue = Number(zero.innerText);
-    input.value += btnValue; 
-    number = input.value;
-}
-zero.addEventListener('click', onClickZero)
+    buttons.forEach((digit) => {
+        digit.addEventListener('click', () => {
+            handleButtons(digit.innerText);
+        })
+    })
 
-const one = document.querySelector("#one");
-const onClickOne = () => {
-    let btnValue = Number(one.innerText);
-    input.value += btnValue;
-    number = input.value;
-}
-one.addEventListener('click',onClickOne);
+    function handleButtons(val) {
+        switch (val) {
+            case 'AC':
+                clearDisplay();
+                break;
+            case '/':
+            case '*':
+            case '-':
+            case '+':
+                handleOperators(val);
+                break;
+            case '.':
+                handleFloatingPoint(val);
+                break;
+            case '=':
+                handleResult();
+                break;
+            default:
+                handleClickedDigit(val);
+                break;
+        }
+    }
 
-const two = document.querySelector("#two");
-const onClickTwo = () => {
-    let btnValue = Number(two.innerText);
-    input.value += btnValue;
-    number = input.value;
-}
-two.addEventListener('click',onClickTwo);
+    function clearDisplay() {
+        display.value = '';
+    }
 
-const three = document.querySelector("#three");
-const onClickThree = () =>{
-    let btnValue = Number (three.innerText);
-    input.value += btnValue;
-    number = input.value;
-}
-three.addEventListener('click',onClickThree);
+    function handleClickedDigit(val) {
+        display.value += val;
+    }
 
+    const operators = ['/', '*', '+', '-'];
+    function handleOperators(val) {
+        let displayLength = display.value.length
+        let lastChar = display.value.charAt(displayLength - 1);
+        if (!operators.includes(lastChar) && displayLength != 0 && lastChar != '.') {
+            display.value += val;
+        }
+    }
 
-const four = document.querySelector("#four");
-four.addEventListener('click', () =>{
-    let btnValue = Number (four.innerText);
-    input.value += btnValue;
-    number = input.value;
-});
+    function handleFloatingPoint(val) {
+        let status = true;
+        let i = display.value.length - 1;
+        while (!operators.includes(display.value.charAt(i)) && i >= 0) {
+            if (display.value.charAt(i) == '.') {
+                status = false;
+            }
+            i--;
+        }
 
-const five = document.querySelector("#five");
-five.addEventListener('click', () => {
-    let btnValue = Number(five.innerText);
-    input.value += btnValue; 
-    number = input.value;
-});
+        let len = display.value.length;
 
-const six = document.querySelector("#six");
-six.addEventListener('click', () => {
-    let btnValue = Number(six.innerText);
-    input.value += btnValue;
-    number = input.value;
-});
+        let lastChar = display.value.charAt(len - 1);
 
-const seven = document.querySelector("#seven");
-seven.addEventListener('click', () => {
-    let btnValue = Number(seven.innerText);
-    input.value += btnValue;
-    number = input.value;
-});
+        if (status == true && len != 0 && !operators.includes(lastChar)) {
+            display.value += val;
+        }
+    }
 
-const eight = document.querySelector("#eight");
-eight.addEventListener('click', () => {
-    let btnValue = Number(eight.innerText);
-    input.value += btnValue;
-    number = input.value;
-});
-
-const nine = document.querySelector('#nine');
-nine.addEventListener('click', () => {
-    let btnValue = Number(nine.innerText);
-    input.value += btnValue;
-    number = input.value;
-});
-//
-
-const operators = ['/', '*', '-', '+'];
-
-const plus = document.querySelector('#plus');
-plus.addEventListener('click', () => {
-    let btnValue = plus.innerText;
-    input.value += btnValue;
-});
-
-const minus = document.querySelector('#minus');
-minus.addEventListener('click', () => {
-    let btnValue = minus.innerText;
-    input.value += btnValue;
-});
-
-const divide = document.querySelector('#divide');
-divide.addEventListener('click', () => {
-    let btnValue = divide.innerText;
-    input.value += btnValue;
-});
-
-const multiplication = document.querySelector('#multiplication');
-multiplication.addEventListener('click', () => {
-    let btnValue = multiplication.innerText;
-    input.value += btnValue;
-});
-
-const equal = document.querySelector('#equal');
-equal.addEventListener('click', () => {
-    let btnValue = equal.innerText;
-    input.value += btnValue;
-});
+    const handleResult = () => {
+        display.value = eval(display.value);
+    }
+})
