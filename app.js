@@ -68,6 +68,53 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     const handleResult = () => {
-        display.value = eval(display.value);
+        let operatorPrecedency = ['%','/','*','-','+'];
+        // display.value = eval(display.value); 123*34/456+657-23
+        let resultString = display.value;
+        let result;
+        for(let i = 0; i < operatorPrecedency.length; i++){
+            for(let j = 0; j < resultString.length;j++){
+                if(operatorPrecedency[i] == resultString.charAt(j)){
+                    result = calculateExpression(resultString,j);
+                }
+            }
+        }
+    }
+
+    function calculateExpression(resultString, j) {
+        let leftOperand = leftOperand(resultString, j);
+        let rightOperand = rightOperand(resultString, j);
+        switch (resultString.charAt(j)) {
+            case '/':
+                return leftOperand / rightOperand;
+            case '*':
+                return leftOperand * rightOperand;
+            case '-':
+                return leftOperand - rightOperand;
+            case '+':
+                return leftOperand + rightOperand;
+            case '%':
+                return leftOperand % rightOperand;
+        }
+    }
+
+    function leftOperand(resultString,j){
+        let leftNumber = '';
+        let i = j-1;
+        while(!operators.includes(resultString.charAt(i)) && i >= 0){
+            leftNumber = resultString.charAt(i) + leftNumber;
+            i--;
+        }
+        return Number(leftNumber);
+    }
+
+    function rightOperand(resultString,j){
+        let rightNumber = '';
+        let i = j + 1;
+        while(!operators.includes(resultString.charAt(i)) && i < resultString.length){
+            rightNumber += resultString.charAt(i);
+            i++;
+        }
+        return Number(rightNumber);
     }
 })
